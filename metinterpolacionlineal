@@ -1,0 +1,124 @@
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+#define Col 2
+int leerFilasDeTabla()
+{
+	int filas=0;
+	printf("Introduce el numero filas a utilizar en el programa: ");
+	scanf("%d", &filas);
+	system("cls");
+	return filas;
+}
+int leerDatosDeTabla(int filas, int i, int j)
+{
+	int x;
+	if(j < 1)
+	{
+		printf("Introduce el Valor de X%d:    ", i);
+		scanf ("%d", &x);
+		printf("\n");
+		return x;
+	}
+	printf("Introduce el Valor de f(x%d): ", i);
+	scanf ("%d", &x);
+	printf("\n");
+	return x;
+}
+void imprimirTabla(double x, int j, int i)
+{
+	if(j < 1)
+	{
+		printf("X%d           %.2f   |", i, x);
+		return;
+	}
+	printf("f(x%d)           %.2f   \n", i, x);
+}
+int identificarDondeEstaX(double datosEnTabla, int i, int x)
+{
+	if(x < datosEnTabla)
+	{
+		return i;
+	}
+}
+double calcularF1x( double x0, double x1, double fx0, double fx1, int x)
+{
+	double f1x = fx0 + ((fx1 - fx0)/(x1-x0)) * (x - x0);
+}
+
+int main()
+{
+	int i=0, j=0, filas =0;
+	int	posicionDeX=0;
+	printf("Introduce de forma de menor a mayor en el caso de las X\n\n");
+	filas = leerFilasDeTabla();
+	double datosEnTabla[filas][Col];
+	for (i = 0; i < filas; i++)
+	{
+		for(j = 0; j < Col;j++)
+		{
+			datosEnTabla[i][j] = leerDatosDeTabla(filas, i, j);
+			if (datosEnTabla[i-1][0] >= datosEnTabla[i][0])
+			{
+				printf("Advertencia: La X anterior es mayor o igual a la X actual\n");
+				printf("Apagando programa\n");
+				getch();
+				return 0;
+			}
+		}
+	}
+	system("cls");
+	printf("X                    |f(x)    \n");
+	printf("---------------------------------------------\n");
+	for (i = 0; i < filas; i++)
+	{
+		for (j = 0; j < Col; j++)
+		{
+			imprimirTabla(datosEnTabla[i][j], j, i);
+		}
+	}
+	int x;
+	printf ("Introduce el valor de X: ");
+	scanf("%d", &x);
+	for (i =0; i<filas; i++)
+	{
+		posicionDeX = identificarDondeEstaX(datosEnTabla[i][0], i, x);
+		if (posicionDeX != 0)
+		{
+			break;
+		}
+	}
+	double x0  = datosEnTabla[posicionDeX - 1] [0];
+	double x1  = datosEnTabla[posicionDeX]     [0];
+	double fx0 = datosEnTabla[posicionDeX - 1 ][1];
+	double fx1 = datosEnTabla[posicionDeX]     [1];
+	printf("Valores que se utilizaran son: \n");
+	printf("X0 = %.2f\nX1 = %.2f\nf(x0) = %.2f\nf(x1) = %.2f\nX = %d\n", x0, x1, fx0, fx1, x);
+	printf("\nQuieres utilizar otra X1 y f(x1)?\nIntroduce el numero de tu opcion\n1.- Si\n2.- No\n");
+	int op;
+	scanf("%d", &op);
+	if (op == 1)
+	{
+		printf("Introduce el numero de la X que quieres usar\nEjemplo: Si es X3, introduces el numero 3\n");
+		printf("----:");
+		int posNuevaDeX=0;
+		scanf("%d", &posNuevaDeX);
+		if(posNuevaDeX <= posicionDeX)
+		{
+			printf("\nLa nueva X1 es igual o menor a la vieja X1\nSe producira un calculo erroneo\n");
+			printf("Apagando programa");
+			return 0;
+		}
+		x1   = datosEnTabla[posNuevaDeX]     [0];
+		fx1  = datosEnTabla[posNuevaDeX]     [1];
+		system("cls");
+		printf("Nuevos valores:\n");
+		printf("X0 = %.2f\nX1 = %.2f\nf(x0) = %.2f\nf(x1) = %.2f\nX = %d\n", x0, x1, fx0, fx1, x);
+	}
+	printf("Presiona Enter");
+	getch();
+	system("cls");
+	printf("Calculo de f1(x):\n");
+	printf("f1(x) = %.2f", calcularF1x( x0, x1, fx0, fx1, x));
+	return 0;
+}
